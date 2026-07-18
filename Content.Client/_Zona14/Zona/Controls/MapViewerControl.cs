@@ -629,38 +629,32 @@ public sealed class MapViewerControl : Control
             (packed & 0xFF) / 255f);
     }
 
-    private static Color GetTrackedBlipColor(ZonaTrackedBlipKind kind)
+private static Color GetTrackedBlipColor(ZonaTrackedBlipKind kind)
+{
+    switch (kind)
     {
-        switch (kind)
-        {
-            case ZonaTrackedBlipKind.Elder:
-                return new Color(0.95f, 0.2f, 0.2f, 1f);
-            case ZonaTrackedBlipKind.Paladin:
-                return new Color(0.2f, 0.55f, 1f, 1f);
-            case ZonaTrackedBlipKind.Knight:
-                return new Color(0.15f, 0.85f, 0.35f, 1f);
-            case ZonaTrackedBlipKind.Scribe:
-                return new Color(0.35f, 0.95f, 0.95f, 1f);
-            case ZonaTrackedBlipKind.Squire:
-                return new Color(1f, 0.6f, 0.15f, 1f);
-            case ZonaTrackedBlipKind.LegionCenturion:
-                return new Color(0.95f, 0.72f, 0.08f, 1f);
-            case ZonaTrackedBlipKind.LegionDecanus:
-                return new Color(0.92f, 0.18f, 0.12f, 1f);
-            case ZonaTrackedBlipKind.LegionWarrior:
-                return new Color(0.70f, 0.16f, 0.12f, 1f);
-            case ZonaTrackedBlipKind.LegionRecruit:
-                return new Color(0.62f, 0.32f, 0.12f, 1f);
-            case ZonaTrackedBlipKind.PipBoyContact:
-                return new Color(0.2f, 0.85f, 1f, 1f);
-            case ZonaTrackedBlipKind.PipBoyGroupMember:
-                return new Color(0.2f, 1f, 0.8f, 1f);
-            case ZonaTrackedBlipKind.TribalHuntTarget:
-                return new Color(1f, 0.20f, 0.18f, 1f);
-            case ZonaTrackedBlipKind.DeadBody:
-                return new Color(0.9f, 0.9f, 0.9f, 1f);
-            default:
-                return new Color(0.98f, 0.84f, 0.15f, 0.95f);
-        }
+        /*
+         * Zona14; Fallout-specific faction and rank blips are intentionally
+         * disabled, and i doubt we'll even need it but just in-case it's here
+         *
+         * case ZonaTrackedBlipKind.Elder:
+         * case ZonaTrackedBlipKind.Paladin:
+         * case ZonaTrackedBlipKind.Knight:
+         * case ZonaTrackedBlipKind.Scribe:
+         * case ZonaTrackedBlipKind.Squire:
+         * case ZonaTrackedBlipKind.LegionCenturion:
+         * case ZonaTrackedBlipKind.LegionDecanus:
+         * case ZonaTrackedBlipKind.LegionWarrior:
+         * case ZonaTrackedBlipKind.LegionRecruit:
+         * case ZonaTrackedBlipKind.PipBoyContact:
+         * case ZonaTrackedBlipKind.PipBoyGroupMember:
+         * case ZonaTrackedBlipKind.TribalHuntTarget:
+         */
+
+        case ZonaTrackedBlipKind.DeadBody:
+            return new Color(0.9f, 0.9f, 0.9f, 1f);
+
+        default:
+            return new Color(0.98f, 0.84f, 0.15f, 0.95f);
     }
-}
+}}

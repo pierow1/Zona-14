@@ -13,20 +13,25 @@ public enum ZonaUiKey : byte
 [Serializable, NetSerializable]
 public enum ZonaTrackedBlipKind : byte
 {
-    Unknown,
-    Elder,
-    Paladin,
-    Knight,
-    Scribe,
-    Squire,
-    LegionCenturion,
-    LegionDecanus,
-    LegionWarrior,
-    LegionRecruit,
-    PipBoyContact,
-    PipBoyGroupMember,
-    TribalHuntTarget,
-    DeadBody,
+    Unknown = 0,
+
+    // Zona14: Fallout faction/rank blips are not used in Zona14
+    // values are retained in comments for network compatibility reference
+    // Elder = 1,
+    // Paladin = 2,
+    // Knight = 3,
+    // Scribe = 4,
+    // Squire = 5,
+    // LegionCenturion = 6,
+    // LegionDecanus = 7,
+    // LegionWarrior = 8,
+    // LegionRecruit = 9,
+    // PipBoyContact = 10,
+    // PipBoyGroupMember = 11,
+    // TribalHuntTarget = 12,
+
+    // keep the original numeric value so existing serialized/network data is not reinterpreted
+    DeadBody = 13,
 }
 
 [Serializable, NetSerializable]
@@ -37,17 +42,18 @@ public enum ZonaAnnotationType : byte
     Draw,
 }
 
-[Serializable, NetSerializable]
-public enum ZonaTacticalFeedKind : byte
-{
-    None,
-    Brotherhood,
-    Vault,
-    NCR,
-    Enclave,
-    Legion,
-    Followers,
-}
+// Zona14; Fallout tactical feeds are not used in Zona14
+// [Serializable, NetSerializable]
+// public enum ZonaTacticalFeedKind : byte
+// {
+//     None,
+//     Brotherhood,
+//     Vault,
+//     NCR,
+//     Enclave,
+//     Legion,
+//     Followers,
+// }
 
 [Serializable, NetSerializable]
 public readonly record struct ZonaTrackedBlip(
@@ -136,7 +142,7 @@ public sealed class ZonaRemoveAnnotationMessage : BoundUserInterfaceMessage
 }
 
 /// <summary>
-/// server-side state for a physical paper map. its annotations travel with that map entity.
+/// server-side state for a physical paper map. Its annotations travel with that map entity.
 /// </summary>
 [RegisterComponent]
 public sealed partial class ZonaComponent : Component
@@ -150,11 +156,12 @@ public sealed partial class ZonaComponent : Component
     [DataField(required: true)]
     public Box2 WorldBounds;
 
-    [DataField]
-    public bool TrackBrotherhoodHolotags;
+    // Zona14; Fallout faction tracking is not used in Zona14
+    // [DataField]
+    // public bool TrackBrotherhoodHolotags;
 
-    [DataField]
-    public ZonaTacticalFeedKind TacticalFeed;
+    // [DataField]
+    // public ZonaTacticalFeedKind TacticalFeed;
 
     [DataField]
     public bool CompactHud;
