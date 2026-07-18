@@ -1,0 +1,29 @@
+# Zona14 add; physical world map with server-sided annotations
+- type: entity
+  parent: BaseItem
+  id: ZonaDebugMap
+  name: map of the Zone
+  suffix: Z14
+  description: A weathered paper map of the Zone. I could share my land navigation notes with others with this.
+  components:
+  - type: Zona
+    mapTexturePath: _Zona14/Zona/Maps/STWorld.png # the backdrop image of the map itself
+    mapTitle: The Zone
+    worldBounds: "-512,-512,512,512" # this needs to be adjusted later depending on the map size   -pierow
+  - type: Sprite
+    sprite: _Zona14/Zona/map.rsi
+    layers:
+    - state: map
+  - type: Item
+    size: Small
+  - type: ActivatableUI
+    inHandsOnly: false
+    singleUser: true
+    key: enum.ZonaUiKey.Key
+  - type: UserInterface
+    interfaces:
+      enum.ZonaUiKey.Key:
+        type: ZonaBoundUserInterface
+  - type: Tag
+    tags:
+    - Document

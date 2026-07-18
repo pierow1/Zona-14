@@ -1,0 +1,53 @@
+<pda:ZonaPdaMapUiFragment xmlns="https://spacestation14.io"
+                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                          xmlns:pda="clr-namespace:Content.Client._Zona14.Zona.Pda"
+                          xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
+                          x:Class="Content.Client._Zona14.Zona.Pda.ZonaPdaMapUiFragment"
+                          Margin="1 0 2 0">
+    <BoxContainer Orientation="Vertical" HorizontalExpand="True" VerticalExpand="True">
+        <controls:StripeBack>
+            <PanelContainer>
+                <Label Name="MapTitleLabel" Text="The Zone" StyleClasses="LabelBig" Align="Center"/>
+            </PanelContainer>
+        </controls:StripeBack>
+
+        <PanelContainer Name="MapContainer"
+                        HorizontalExpand="True"
+                        VerticalExpand="True"
+                        StyleClasses="AngleRect"/>
+
+        <PanelContainer StyleClasses="LowDivider"/>
+
+        <BoxContainer Name="ToolbarContainer"
+                      Orientation="Vertical"
+                      Margin="10 4 10 0"
+                      VerticalAlignment="Bottom">
+            <BoxContainer Orientation="Horizontal" Margin="0 0 0 2">
+                <Button Name="PanModeButton" Text="Pan"/>
+                <Button Name="MarkerModeButton" Text="Marker" Margin="6 0 0 0"/>
+                <Button Name="BoxModeButton" Text="Box" Margin="6 0 0 0"/>
+                <Button Name="DrawModeButton" Text="Draw" Margin="6 0 0 0"/>
+                <Button Name="EraseButton" Text="Erase" Margin="6 0 0 0"/>
+                <Button Name="ClearMapButton" Text="Clear" Margin="6 0 0 0"/>
+                <LineEdit Name="AnnotationText"
+                          HorizontalExpand="True"
+                          Margin="8 0 0 0"
+                          PlaceHolder="Annotation text"/>
+            </BoxContainer>
+
+            <BoxContainer Name="ColorRow"
+                          Orientation="Horizontal"
+                          Margin="0 0 0 2"
+                          VerticalAlignment="Center"/>
+        </BoxContainer>
+
+        <BoxContainer Orientation="Horizontal" Margin="10 2 5 2" VerticalAlignment="Bottom">
+            <Label Name="FooterText"
+                   Text="Scroll to zoom | Click and drag to pan"
+                   StyleClasses="WindowFooterText"
+                   HorizontalAlignment="Left"
+                   HorizontalExpand="True"
+                   Margin="0 0 5 0"/>
+        </BoxContainer>
+    </BoxContainer>
+</pda:ZonaPdaMapUiFragment>
