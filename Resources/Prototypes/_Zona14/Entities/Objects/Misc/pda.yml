@@ -78,6 +78,7 @@
     preinstalled:
       - NanoTaskCartridge
       - NotekeeperCartridge
+      - Z14WorldMapCartridge
       - STMessengerCartridge
       - Z14STFactionRelationsCartridge
       - STMercBoardCartridge
