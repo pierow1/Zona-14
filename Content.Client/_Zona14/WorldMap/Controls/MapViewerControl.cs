@@ -1,5 +1,7 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Adapted from Misfit-Sanctuary/nuclear-14 @ <source-commit> (AGPL-3.0). See CONTRIBUTING.md §5.
 using System.Numerics;
-using Content.Shared._Zona14.Zona;
+using Content.Shared._Zona14.WorldMap;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.Player;
@@ -9,7 +11,7 @@ using Robust.Shared.Input;
 using Robust.Shared.Maths;
 using Robust.Shared.Timing;
 
-namespace Content.Client._Zona14.Zona.Controls;
+namespace Content.Client._Zona14.WorldMap.Controls;
 
 public sealed class MapViewerControl : Control
 {
@@ -27,15 +29,15 @@ public sealed class MapViewerControl : Control
     [Dependency] private readonly IGameTiming _gameTiming = default!;
     [Dependency] private readonly IResourceCache _resourceCache = default!;
 
-    public event Action<ZonaAnnotation>? OnAddAnnotation;
+    public event Action<WorldMapAnnotation>? OnAddAnnotation;
     public event Action<int>? OnRemoveAnnotation;
     public event Action? OnClearAnnotations;
 
     private readonly Font _labelFont;
     private Texture? _texture;
     private Box2 _worldBounds;
-    private ZonaTrackedBlip[] _trackedBlips = Array.Empty<ZonaTrackedBlip>();
-    private ZonaAnnotation[] _annotations = Array.Empty<ZonaAnnotation>();
+    private MapTrackedBlip[] _trackedBlips = Array.Empty<MapTrackedBlip>();
+    private WorldMapAnnotation[] _annotations = Array.Empty<WorldMapAnnotation>();
     private AnnotationMode _annotationMode;
     private string _pendingAnnotationText = string.Empty;
     private Vector2? _annotationDragStartUv;
@@ -72,8 +74,8 @@ public sealed class MapViewerControl : Control
         _pan = Vector2.Zero;
     }
 
-    public void SetTrackedBlips(ZonaTrackedBlip[] trackedBlips) => _trackedBlips = trackedBlips;
-    public void SetAnnotations(ZonaAnnotation[] annotations) => _annotations = annotations;
+    public void SetTrackedBlips(MapTrackedBlip[] trackedBlips) => _trackedBlips = trackedBlips;
+    public void SetAnnotations(WorldMapAnnotation[] annotations) => _annotations = annotations;
 
     public void SetAnnotationMode(AnnotationMode mode)
     {
@@ -127,8 +129,8 @@ public sealed class MapViewerControl : Control
 
         if (_annotationMode == AnnotationMode.Box && _annotationDragStartUv.HasValue && _annotationDragCurrentUv.HasValue)
         {
-            DrawAnnotation(handle, new ZonaAnnotation(
-                ZonaAnnotationType.Box,
+            DrawAnnotation(handle, new WorldMapAnnotation(
+                WorldMapAnnotationType.Box,
                 _annotationDragStartUv.Value.X,
                 _annotationDragStartUv.Value.Y,
                 _annotationDragCurrentUv.Value.X,
@@ -289,7 +291,7 @@ public sealed class MapViewerControl : Control
         {
             if (TryControlToUv(args.RelativePosition, out var uv))
             {
-                OnAddAnnotation?.Invoke(new ZonaAnnotation(ZonaAnnotationType.Marker, uv.X, uv.Y, uv.X, uv.Y, GetAnnotationLabel("Marker"), ToPackedColor(_currentColor), _currentStrokeWidth, null));
+                OnAddAnnotation?.Invoke(new WorldMapAnnotation(WorldMapAnnotationType.Marker, uv.X, uv.Y, uv.X, uv.Y, GetAnnotationLabel("Marker"), ToPackedColor(_currentColor), _currentStrokeWidth, null));
                 args.Handle();
             }
             return;
@@ -330,7 +332,7 @@ public sealed class MapViewerControl : Control
                     pts[i * 2] = _freeDrawUvPoints[i].X;
                     pts[i * 2 + 1] = _freeDrawUvPoints[i].Y;
                 }
-                OnAddAnnotation?.Invoke(new ZonaAnnotation(ZonaAnnotationType.Draw, 0f, 0f, 0f, 0f, GetAnnotationLabel("Drawing"), ToPackedColor(_currentColor), _currentStrokeWidth, pts));
+                OnAddAnnotation?.Invoke(new WorldMapAnnotation(WorldMapAnnotationType.Draw, 0f, 0f, 0f, 0f, GetAnnotationLabel("Drawing"), ToPackedColor(_currentColor), _currentStrokeWidth, pts));
             }
             _freeDrawUvPoints.Clear();
             args.Handle();
@@ -339,7 +341,7 @@ public sealed class MapViewerControl : Control
 
         if (_annotationMode == AnnotationMode.Box && _annotationDragStartUv.HasValue && _annotationDragCurrentUv.HasValue)
         {
-            OnAddAnnotation?.Invoke(new ZonaAnnotation(ZonaAnnotationType.Box, _annotationDragStartUv.Value.X, _annotationDragStartUv.Value.Y, _annotationDragCurrentUv.Value.X, _annotationDragCurrentUv.Value.Y, GetAnnotationLabel("Box"), ToPackedColor(_currentColor), _currentStrokeWidth, null));
+            OnAddAnnotation?.Invoke(new WorldMapAnnotation(WorldMapAnnotationType.Box, _annotationDragStartUv.Value.X, _annotationDragStartUv.Value.Y, _annotationDragCurrentUv.Value.X, _annotationDragCurrentUv.Value.Y, GetAnnotationLabel("Box"), ToPackedColor(_currentColor), _currentStrokeWidth, null));
             _annotationDragStartUv = null;
             _annotationDragCurrentUv = null;
             args.Handle();
@@ -434,7 +436,7 @@ public sealed class MapViewerControl : Control
         DrawThickLine(handle, tip, right, new Color(1f, 0.12f, 0.12f, 1f), 3f);
     }
 
-    private static void DrawBlip(DrawingHandleScreen handle, Vector2 pos, ZonaTrackedBlipKind kind)
+    private static void DrawBlip(DrawingHandleScreen handle, Vector2 pos, MapTrackedBlipKind kind)
     {
         var color = GetTrackedBlipColor(kind);
         handle.DrawCircle(pos, 16f, new Color(0f, 0f, 0f, 0.55f));
@@ -442,14 +444,14 @@ public sealed class MapViewerControl : Control
         handle.DrawCircle(pos, 3.5f, Color.White);
     }
 
-    private void DrawAnnotation(DrawingHandleScreen handle, ZonaAnnotation annotation, float x, float y, float drawW, float drawH, bool preview = false, Color? overrideColor = null)
+    private void DrawAnnotation(DrawingHandleScreen handle, WorldMapAnnotation annotation, float x, float y, float drawW, float drawH, bool preview = false, Color? overrideColor = null)
     {
         var baseColor = overrideColor ?? FromPackedColor(annotation.PackedColor);
         var color = new Color(baseColor.R, baseColor.G, baseColor.B, preview ? 0.55f : 0.90f);
 
         switch (annotation.Type)
         {
-            case ZonaAnnotationType.Marker:
+            case WorldMapAnnotationType.Marker:
             {
                 var pos = new Vector2(x + annotation.StartX * drawW, y + annotation.StartY * drawH);
                 handle.DrawCircle(pos, 13f, new Color(0f, 0f, 0f, 0.6f));
@@ -459,7 +461,7 @@ public sealed class MapViewerControl : Control
                 break;
             }
 
-            case ZonaAnnotationType.Box:
+            case WorldMapAnnotationType.Box:
             {
                 var start = new Vector2(x + annotation.StartX * drawW, y + annotation.StartY * drawH);
                 var end = new Vector2(x + annotation.EndX * drawW, y + annotation.EndY * drawH);
@@ -470,7 +472,7 @@ public sealed class MapViewerControl : Control
                 break;
             }
 
-            case ZonaAnnotationType.Draw:
+            case WorldMapAnnotationType.Draw:
             {
                 var pts = annotation.StrokePoints;
                 if (pts == null || pts.Length < 4)
@@ -544,17 +546,17 @@ public sealed class MapViewerControl : Control
         handle.DrawRect(new UIBox2(rect.Right - width, rect.Top, rect.Right, rect.Bottom), color);
     }
 
-    private static float GetAnnotationDistance(ZonaAnnotation annotation, Vector2 position, float x, float y, float drawW, float drawH)
+    private static float GetAnnotationDistance(WorldMapAnnotation annotation, Vector2 position, float x, float y, float drawW, float drawH)
     {
         switch (annotation.Type)
         {
-            case ZonaAnnotationType.Marker:
+            case WorldMapAnnotationType.Marker:
                 return Vector2.Distance(position, new Vector2(x + annotation.StartX * drawW, y + annotation.StartY * drawH));
 
-            case ZonaAnnotationType.Box:
+            case WorldMapAnnotationType.Box:
                 return DistanceToBox(annotation, position, x, y, drawW, drawH);
 
-            case ZonaAnnotationType.Draw:
+            case WorldMapAnnotationType.Draw:
                 return DistanceToStroke(annotation, position, x, y, drawW, drawH);
 
             default:
@@ -562,7 +564,7 @@ public sealed class MapViewerControl : Control
         }
     }
 
-    private static float DistanceToBox(ZonaAnnotation annotation, Vector2 position, float x, float y, float drawW, float drawH)
+    private static float DistanceToBox(WorldMapAnnotation annotation, Vector2 position, float x, float y, float drawW, float drawH)
     {
         var start = new Vector2(x + annotation.StartX * drawW, y + annotation.StartY * drawH);
         var end = new Vector2(x + annotation.EndX * drawW, y + annotation.EndY * drawH);
@@ -575,7 +577,7 @@ public sealed class MapViewerControl : Control
         return MathF.Sqrt(dx * dx + dy * dy);
     }
 
-    private static float DistanceToStroke(ZonaAnnotation annotation, Vector2 position, float x, float y, float drawW, float drawH)
+    private static float DistanceToStroke(WorldMapAnnotation annotation, Vector2 position, float x, float y, float drawW, float drawH)
     {
         var pts = annotation.StrokePoints;
         if (pts == null || pts.Length < 4)
@@ -629,7 +631,7 @@ public sealed class MapViewerControl : Control
             (packed & 0xFF) / 255f);
     }
 
-private static Color GetTrackedBlipColor(ZonaTrackedBlipKind kind)
+private static Color GetTrackedBlipColor(MapTrackedBlipKind kind)
 {
     switch (kind)
     {
@@ -637,21 +639,21 @@ private static Color GetTrackedBlipColor(ZonaTrackedBlipKind kind)
          * Zona14; Fallout-specific faction and rank blips are intentionally
          * disabled, and i doubt we'll even need it but just in-case it's here
          *
-         * case ZonaTrackedBlipKind.Elder:
-         * case ZonaTrackedBlipKind.Paladin:
-         * case ZonaTrackedBlipKind.Knight:
-         * case ZonaTrackedBlipKind.Scribe:
-         * case ZonaTrackedBlipKind.Squire:
-         * case ZonaTrackedBlipKind.LegionCenturion:
-         * case ZonaTrackedBlipKind.LegionDecanus:
-         * case ZonaTrackedBlipKind.LegionWarrior:
-         * case ZonaTrackedBlipKind.LegionRecruit:
-         * case ZonaTrackedBlipKind.PipBoyContact:
-         * case ZonaTrackedBlipKind.PipBoyGroupMember:
-         * case ZonaTrackedBlipKind.TribalHuntTarget:
+         * case MapTrackedBlipKind.Elder:
+         * case MapTrackedBlipKind.Paladin:
+         * case MapTrackedBlipKind.Knight:
+         * case MapTrackedBlipKind.Scribe:
+         * case MapTrackedBlipKind.Squire:
+         * case MapTrackedBlipKind.LegionCenturion:
+         * case MapTrackedBlipKind.LegionDecanus:
+         * case MapTrackedBlipKind.LegionWarrior:
+         * case MapTrackedBlipKind.LegionRecruit:
+         * case MapTrackedBlipKind.PipBoyContact:
+         * case MapTrackedBlipKind.PipBoyGroupMember:
+         * case MapTrackedBlipKind.TribalHuntTarget:
          */
 
-        case ZonaTrackedBlipKind.DeadBody:
+        case MapTrackedBlipKind.DeadBody:
             return new Color(0.9f, 0.9f, 0.9f, 1f);
 
         default:

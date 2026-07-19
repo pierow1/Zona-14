@@ -1,22 +1,24 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Adapted from Misfit-Sanctuary/nuclear-14 @ <source-commit> (AGPL-3.0). See CONTRIBUTING.md §5.
 using Robust.Shared.Maths;
 using Robust.Shared.Serialization;
 using Robust.Shared.Utility;
 
-namespace Content.Shared._Zona14.Zona;
+namespace Content.Shared._Zona14.WorldMap;
 
 [Serializable, NetSerializable]
-public enum ZonaUiKey : byte
+public enum WorldMapUiKey : byte
 {
     Key,
 }
 
 [Serializable, NetSerializable]
-public enum ZonaTrackedBlipKind : byte
+public enum MapTrackedBlipKind : byte
 {
     Unknown = 0,
 
-    // Zona14: Fallout faction/rank blips are not used in Zona14
-    // values are retained in comments for network compatibility reference
+    // Fallout faction/rank blips are not used in Zona14; values are retained in
+    // comments for network-compatibility reference.
     // Elder = 1,
     // Paladin = 2,
     // Knight = 3,
@@ -30,21 +32,21 @@ public enum ZonaTrackedBlipKind : byte
     // PipBoyGroupMember = 11,
     // TribalHuntTarget = 12,
 
-    // keep the original numeric value so existing serialized/network data is not reinterpreted
+    // Keep the original numeric value so existing serialized/network data is not reinterpreted.
     DeadBody = 13,
 }
 
 [Serializable, NetSerializable]
-public enum ZonaAnnotationType : byte
+public enum WorldMapAnnotationType : byte
 {
     Marker,
     Box,
     Draw,
 }
 
-// Zona14; Fallout tactical feeds are not used in Zona14
+// Fallout tactical feeds are not used in Zona14.
 // [Serializable, NetSerializable]
-// public enum ZonaTacticalFeedKind : byte
+// public enum MapTacticalFeedKind : byte
 // {
 //     None,
 //     Brotherhood,
@@ -56,15 +58,15 @@ public enum ZonaAnnotationType : byte
 // }
 
 [Serializable, NetSerializable]
-public readonly record struct ZonaTrackedBlip(
+public readonly record struct MapTrackedBlip(
     float X,
     float Y,
     string Label,
-    ZonaTrackedBlipKind Kind);
+    MapTrackedBlipKind Kind);
 
 [Serializable, NetSerializable]
-public readonly record struct ZonaAnnotation(
-    ZonaAnnotationType Type,
+public readonly record struct WorldMapAnnotation(
+    WorldMapAnnotationType Type,
     float StartX,
     float StartY,
     float EndX,
@@ -79,7 +81,7 @@ public readonly record struct ZonaAnnotation(
 }
 
 [Serializable, NetSerializable]
-public sealed class ZonaBoundUserInterfaceState : BoundUserInterfaceState
+public sealed class WorldMapBoundUserInterfaceState : BoundUserInterfaceState
 {
     public readonly string MapTitle;
     public readonly string MapTexturePath;
@@ -88,10 +90,10 @@ public sealed class ZonaBoundUserInterfaceState : BoundUserInterfaceState
     public readonly float BoundsBottom;
     public readonly float BoundsRight;
     public readonly float BoundsTop;
-    public readonly ZonaTrackedBlip[] TrackedBlips;
-    public readonly ZonaAnnotation[] SharedAnnotations;
+    public readonly MapTrackedBlip[] TrackedBlips;
+    public readonly WorldMapAnnotation[] SharedAnnotations;
 
-    public ZonaBoundUserInterfaceState(
+    public WorldMapBoundUserInterfaceState(
         string mapTitle,
         string mapTexturePath,
         bool compactHud,
@@ -99,8 +101,8 @@ public sealed class ZonaBoundUserInterfaceState : BoundUserInterfaceState
         float boundsBottom,
         float boundsRight,
         float boundsTop,
-        ZonaTrackedBlip[]? trackedBlips = null,
-        ZonaAnnotation[]? sharedAnnotations = null)
+        MapTrackedBlip[]? trackedBlips = null,
+        WorldMapAnnotation[]? sharedAnnotations = null)
     {
         MapTitle = mapTitle;
         MapTexturePath = mapTexturePath;
@@ -109,43 +111,43 @@ public sealed class ZonaBoundUserInterfaceState : BoundUserInterfaceState
         BoundsBottom = boundsBottom;
         BoundsRight = boundsRight;
         BoundsTop = boundsTop;
-        TrackedBlips = trackedBlips ?? Array.Empty<ZonaTrackedBlip>();
-        SharedAnnotations = sharedAnnotations ?? Array.Empty<ZonaAnnotation>();
+        TrackedBlips = trackedBlips ?? Array.Empty<MapTrackedBlip>();
+        SharedAnnotations = sharedAnnotations ?? Array.Empty<WorldMapAnnotation>();
     }
 }
 
 [Serializable, NetSerializable]
-public sealed class ZonaAddAnnotationMessage : BoundUserInterfaceMessage
+public sealed class WorldMapAddAnnotationMessage : BoundUserInterfaceMessage
 {
-    public readonly ZonaAnnotation Annotation;
+    public readonly WorldMapAnnotation Annotation;
 
-    public ZonaAddAnnotationMessage(ZonaAnnotation annotation)
+    public WorldMapAddAnnotationMessage(WorldMapAnnotation annotation)
     {
         Annotation = annotation;
     }
 }
 
 [Serializable, NetSerializable]
-public sealed class ZonaClearAnnotationsMessage : BoundUserInterfaceMessage
+public sealed class WorldMapClearAnnotationsMessage : BoundUserInterfaceMessage
 {
 }
 
 [Serializable, NetSerializable]
-public sealed class ZonaRemoveAnnotationMessage : BoundUserInterfaceMessage
+public sealed class WorldMapRemoveAnnotationMessage : BoundUserInterfaceMessage
 {
     public readonly int Index;
 
-    public ZonaRemoveAnnotationMessage(int index)
+    public WorldMapRemoveAnnotationMessage(int index)
     {
         Index = index;
     }
 }
 
 /// <summary>
-/// server-side state for a physical paper map. Its annotations travel with that map entity.
+/// Server-side state for a physical paper map. Its annotations travel with that map entity.
 /// </summary>
 [RegisterComponent]
-public sealed partial class ZonaComponent : Component
+public sealed partial class WorldMapComponent : Component
 {
     [DataField(required: true)]
     public ResPath MapTexturePath = default!;
@@ -156,16 +158,9 @@ public sealed partial class ZonaComponent : Component
     [DataField(required: true)]
     public Box2 WorldBounds;
 
-    // Zona14; Fallout faction tracking is not used in Zona14
-    // [DataField]
-    // public bool TrackBrotherhoodHolotags;
-
-    // [DataField]
-    // public ZonaTacticalFeedKind TacticalFeed;
-
     [DataField]
     public bool CompactHud;
 
     [DataField]
-    public List<ZonaAnnotation> SharedAnnotations = new();
+    public List<WorldMapAnnotation> SharedAnnotations = new();
 }

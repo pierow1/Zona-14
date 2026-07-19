@@ -1,9 +1,9 @@
-<pda:ZonaPdaMapUiFragment xmlns="https://spacestation14.io"
-                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                          xmlns:pda="clr-namespace:Content.Client._Zona14.Zona.Pda"
-                          xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
-                          x:Class="Content.Client._Zona14.Zona.Pda.ZonaPdaMapUiFragment"
-                          Margin="1 0 2 0">
+<pda:WorldMapPdaUiFragment xmlns="https://spacestation14.io"
+                           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                           xmlns:pda="clr-namespace:Content.Client._Zona14.WorldMap.Pda"
+                           xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
+                           x:Class="Content.Client._Zona14.WorldMap.Pda.WorldMapPdaUiFragment"
+                           Margin="1 0 2 0">
     <BoxContainer Orientation="Vertical" HorizontalExpand="True" VerticalExpand="True">
         <controls:StripeBack>
             <PanelContainer>
@@ -50,4 +50,4 @@
                    Margin="0 0 5 0"/>
         </BoxContainer>
     </BoxContainer>
-</pda:ZonaPdaMapUiFragment>
+</pda:WorldMapPdaUiFragment>

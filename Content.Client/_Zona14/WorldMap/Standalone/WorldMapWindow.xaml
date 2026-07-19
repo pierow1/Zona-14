@@ -1,12 +1,12 @@
-<standalone:ZonaWindow xmlns="https://spacestation14.io"
-                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                               xmlns:standalone="clr-namespace:Content.Client._Zona14.Zona.Standalone"
-                               xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
-                          x:Class="Content.Client._Zona14.Zona.Standalone.ZonaWindow"
-                               Title="Map"
-                               Resizable="True"
-                               SetSize="700 600"
-                               MinSize="400 350">
+<standalone:WorldMapWindow xmlns="https://spacestation14.io"
+                           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                           xmlns:standalone="clr-namespace:Content.Client._Zona14.WorldMap.Standalone"
+                           xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
+                           x:Class="Content.Client._Zona14.WorldMap.Standalone.WorldMapWindow"
+                           Title="Map"
+                           Resizable="True"
+                           SetSize="700 600"
+                           MinSize="400 350">
     <BoxContainer Orientation="Vertical" HorizontalExpand="True" VerticalExpand="True">
         <controls:StripeBack>
             <PanelContainer>
@@ -46,4 +46,4 @@
             </BoxContainer>
         </BoxContainer>
     </BoxContainer>
-</standalone:ZonaWindow>
+</standalone:WorldMapWindow>

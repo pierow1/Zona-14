@@ -1,7 +1,7 @@
 device-pda-slot-component-slot-name-cartridge = Cartridge
 
 default-program-name = Program
-notekeeper-program-name = Map
+notekeeper-program-name = Notekeeper
 nano-task-program-name = NanoTask
 news-read-program-name = Station news
 

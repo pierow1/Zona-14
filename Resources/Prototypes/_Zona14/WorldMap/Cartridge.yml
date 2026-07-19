@@ -1,0 +1,22 @@
+# PDA map program. Its own cartridge — does NOT replace the built-in Notekeeper.
+- type: entity
+  parent: BasePDACartridge
+  id: Z14WorldMapCartridge
+  name: map cartridge
+  suffix: Z14
+  categories: [ Zona14 ]
+  description: A PDA program that displays a shared map of the Zone.
+  components:
+  - type: Sprite
+    state: cart-nav
+  - type: UIFragment
+    ui: !type:WorldMapCartridgeUi
+  - type: Cartridge
+    programName: z14-world-map-program-name
+    icon:
+      sprite: Objects/Misc/books.rsi
+      state: book_icon
+  - type: WorldMapCartridge
+    mapTexturePath: _Zona14/WorldMap/Maps/STWorld.png
+    mapTitle: The Zone
+    worldBounds: "-512,-512,512,512" # TODO: adjust to the real map extents once the world map is finalized
