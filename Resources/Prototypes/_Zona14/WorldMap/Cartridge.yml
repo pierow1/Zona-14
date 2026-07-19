@@ -14,8 +14,8 @@
   - type: Cartridge
     programName: z14-world-map-program-name
     icon:
-      sprite: Objects/Misc/books.rsi
-      state: book_icon
+      sprite: _Stalker/Objects/Other/Maps/kordonmapstack.rsi
+      state: kordonmapstack
   - type: WorldMapCartridge
     mapTexturePath: _Zona14/WorldMap/Maps/STWorld.png
     mapTitle: The Zone
