@@ -12,9 +12,9 @@
     mapTitle: The Zone
     worldBounds: "-512,-512,512,512" # TODO: adjust to the real map extents once the world map is finalized
   - type: Sprite
-    sprite: _Zona14/WorldMap/map.rsi
+    sprite: _Stalker/Objects/Other/Maps/kordonnorthmap.rsi
     layers:
-    - state: map
+    - state: kordonnorthmap
   - type: Item
     size: Small
   - type: ActivatableUI
